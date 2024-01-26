@@ -8,6 +8,7 @@ VwRaiseCanboxRemote::VwRaiseCanboxRemote(Stream& serial)
 void VwRaiseCanboxRemote::SendButtonCode(VwRaiseCanboxButton button)
 {
     uint8_t data[] = { (uint8_t) button, 0x01 };
+    SendData(ButtonCode, data, sizeof(data));
 }
 
 void VwRaiseCanboxRemote::SendCarInfo(CarStatus* carStatus)
