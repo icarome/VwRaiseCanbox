@@ -13,16 +13,19 @@ enum VwRaiseCanboxButton
     VolumeDown = 0x02,
     NextTrack = 0x03,
     PreviousTrack = 0x04,
-    Source = 0x05,
-    Mute = 0x07,
-    TripComputer = 0x20
+    Source = 0x07,
+    Mute = 0x06,
+    Mode = 0x20,
+    Tel = 0x05,
+    Mic = 0x08,
 };
 
 enum VwRaiseCanboxFunctionId
 {
     CarStatusCode = 0x41,
     AcStatusCode = 0x21,
-    ButtonCode = 0x20
+    ButtonCode = 0x20,
+    VersionCode = 0x30,
 };
 
 typedef struct {
@@ -100,10 +103,13 @@ public:
     ~VwRaiseCanboxRemote();
 
     void SendButtonCode(VwRaiseCanboxButton button);
+    void ReleaseButton(VwRaiseCanboxButton button);
     void SendCarInfo(CarStatus *carStatus);
     void SendCarInfo(DoorStatus *doorStatus);
     void SendCarInfo(CarStatus *carStatus, DoorStatus *doorStatus);
     void SendCarInfo(DoorStatus *doorStatus, CarStatus *carStatus);
     void SendAcInfo(CarAcStatus *acStatus);
+    void SendVersion(uint8_t *ver, uint8_t len);
 };
+
 #endif

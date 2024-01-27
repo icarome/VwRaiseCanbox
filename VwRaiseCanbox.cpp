@@ -5,6 +5,17 @@ VwRaiseCanboxRemote::VwRaiseCanboxRemote(Stream& serial)
     serialPort = &serial;
 }
 
+void VwRaiseCanboxRemote::SendVersion(uint8_t *ver, uint8_t len)
+{
+    SendData(VersionCode, ver, len);
+}
+
+void VwRaiseCanboxRemote::ReleaseButton(VwRaiseCanboxButton button)
+{
+    uint8_t data[] = { (uint8_t) button, 0x00 };
+    SendData(ButtonCode, data, sizeof(data));
+}
+
 void VwRaiseCanboxRemote::SendButtonCode(VwRaiseCanboxButton button)
 {
     uint8_t data[] = { (uint8_t) button, 0x01 };
