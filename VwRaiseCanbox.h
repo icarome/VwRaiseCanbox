@@ -29,26 +29,34 @@ enum VwRaiseCanboxFunctionId
 };
 
 typedef struct {
-    uint8_t ac;
-    uint8_t ac_max;
-    uint8_t recycling;
-    uint8_t recycling_max;
-    uint8_t recycling_min;
-    uint8_t dual;
-    uint8_t rear;
-    uint8_t rear_lock;
-    uint8_t aqs;
-    uint8_t wind;
-    uint8_t middle;
-    uint8_t floor;
-    uint8_t powerfull;
-    uint8_t fanspeed;
-    uint8_t l_temp;
-    uint8_t r_temp;
-    uint8_t l_seat;
-    uint8_t r_seat;
+    // Bit 0
+    uint8_t rear_defrost                :1;
+    uint8_t front_defrost               :1;
+    uint8_t ac_cool_mode_dual           :1;
+    uint8_t ac_cool_mode_auto           :1;
+    uint8_t ac_cool_mode_auto_2         :1;
+    uint8_t cycle_mode                  :1;
+    uint8_t ac_cool_mode_on             :1;
+    uint8_t ac_status                   :1;
+    // Bit 1
+    uint8_t unused8                     :4;
+    uint8_t show_ac_bar                 :1;
+    uint8_t fan_direction_down          :1;
+    uint8_t fan_direction_center        :1;
+    uint8_t fan_direction_up            :1;
+    // Bit 2
+    uint8_t interior_temp_driver          ;
+    // Bit 3
+    uint8_t interior_temp_passenger       ;
+    // Bit 4
+    uint8_t heater_passenger_seat       :2;
+    uint8_t ac_cool_mode_max            :1;
+    uint8_t unused35                    :1;
+    uint8_t heater_driver_seat          :2;
+    uint8_t unused38                    :1;
+    uint8_t ac_auto_in_out_cycle        :1;
 
-} CarAcStatus;
+} CarAcStatusStruct;
 
 typedef struct {
     uint16_t current_rpm;
@@ -75,6 +83,11 @@ typedef union {
     uint8_t asByte;
 } DoorStatus;
 
+typedef union {
+    CarAcStatusStruct status;
+    uint8_t bytes[5];
+} CarAcStatus;
+
 
 constexpr uint8_t MAX_VWRAISECANBOX_MESSAGE_LENGTH = 17;
 
@@ -89,7 +102,7 @@ class VwRaiseCanboxRemote
 private:
     Stream* serialPort;
     void SendData(uint8_t type, uint8_t * msg, uint8_t size);
-    uint8_t canbox_checksum(uint8_t * buf, uint8_t len);
+    uint8_t CanboxChecksum(uint8_t * buf, uint8_t len);
 
 public:
     /*

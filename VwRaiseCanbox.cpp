@@ -47,56 +47,7 @@ void VwRaiseCanboxRemote::SendCarInfo(CarStatus* carStatus)
 
 void VwRaiseCanboxRemote::SendAcInfo(CarAcStatus* acStatus)
 {
-    uint8_t buf[5] = { 0x00, 0x00, 0x00, 0x00, 0x00 };
-
-    if (acStatus->powerfull)
-      buf[0] |= 0x80;
-    if (acStatus->ac)
-      buf[0] |= 0x40;
-    if (acStatus->recycling)
-      buf[0] |= 0x20;
-    if (acStatus->recycling_max)
-      buf[0] |= 0x10;
-    if (acStatus->recycling_min)
-      buf[0] |= 0x08;
-    if (acStatus->dual)
-      buf[0] |= 0x04;
-    if (acStatus->ac_max)
-      buf[0] |= 0x02;
-    if (acStatus->rear)
-      buf[0] |= 0x01;
-
-    if (acStatus->wind)
-      buf[1] |= 0x80;
-    if (acStatus->middle)
-      buf[1] |= 0x40;
-    if (acStatus->floor)
-      buf[1] |= 0x20;
-
-    uint8_t speed = ((acStatus->fanspeed  * 0x07) / 0x0F);
-    buf[1] |= speed & 0x07;
-
-    if ((acStatus->l_temp % 10) == 0x05)
-      buf[2] |= 0x01;
-    buf[2] |= ((int)acStatus->l_temp) << 1;
-
-    if ((acStatus->r_temp % 10) == 0x05)
-      buf[3] |= 0x01;
-    buf[3] |= ((int)acStatus->r_temp) << 1;
-
-    if (acStatus->aqs)
-      buf[4] |= 0x80;
-    if (acStatus->rear_lock)
-      buf[4] |= 0x08;
-    if (acStatus->ac_max)
-      buf[4] |= 0x04;
-
-    if (acStatus->l_seat)
-      buf[4] |= (acStatus->l_seat << 4) & 0x30;
-    if (acStatus->r_seat)
-      buf[4] |= (acStatus->r_seat) & 0x03;
-
-    SendData(AcStatusCode, buf, sizeof(buf));
+    SendData(AcStatusCode, acStatus->bytes, sizeof(acStatus->bytes));
 }
 
 void VwRaiseCanboxRemote::SendCarInfo(DoorStatus* doorStatus) {
@@ -123,11 +74,11 @@ void VwRaiseCanboxRemote::SendData(uint8_t type, uint8_t * msg, uint8_t size) {
   buf[1] = type;
   buf[2] = size;
   memcpy(buf + 3, msg, size);
-  buf[3 + size] = canbox_checksum(buf + 1, size + 2);
+  buf[3 + size] = CanboxChecksum(buf + 1, size + 2);
   serialPort->write(buf, sizeof(buf));
 }
 
-uint8_t VwRaiseCanboxRemote::canbox_checksum(uint8_t * buf, uint8_t len) {
+uint8_t VwRaiseCanboxRemote::CanboxChecksum(uint8_t * buf, uint8_t len) {
   uint8_t sum = 0;
   for (uint8_t i = 0; i < len; i++)
     sum += buf[i];
