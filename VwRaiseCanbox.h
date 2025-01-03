@@ -9,23 +9,27 @@
 
 enum VwRaiseCanboxButton
 {
-    VolumeUp = 0x01,
-    VolumeDown = 0x02,
-    NextTrack = 0x03,
-    PreviousTrack = 0x04,
-    Source = 0x07,
-    Mute = 0x06,
-    Mode = 0x20,
-    Tel = 0x05,
-    Mic = 0x08,
+    VolumeUp        = 0x01,
+    VolumeDown      = 0x02,
+    NextTrack       = 0x03,
+    PreviousTrack   = 0x04,
+    Source          = 0x07,
+    Mute            = 0x06,
+    Mode            = 0x20,
+    Tel             = 0x05,
+    Mic             = 0x08,
 };
 
 enum VwRaiseCanboxFunctionId
 {
-    CarStatusCode = 0x41,
-    AcStatusCode = 0x21,
-    ButtonCode = 0x20,
-    VersionCode = 0x30,
+    CarStatusCode       = 0x41,
+    AcStatusCode        = 0x21,
+    ButtonCode          = 0x20,
+    WheelAngleCode      = 0x26,
+    ParkingStatusCode   = 0x25,
+    FrontRadarCode      = 0x23,
+    RearRadarCode       = 0x22,
+    VersionCode         = 0x30,
 };
 
 typedef struct {
@@ -122,6 +126,10 @@ public:
     void SendCarInfo(CarStatus *carStatus, DoorStatus *doorStatus);
     void SendCarInfo(DoorStatus *doorStatus, CarStatus *carStatus);
     void SendAcInfo(CarAcStatus *acStatus);
+    void SendWheelAngle(float angle);
+    void SendParkStatus(bool parked);
+    void SendFrontRadar(uint8_t fl, uint8_t flm, uint8_t frm, uint8_t fr);
+    void SendRearRadar(uint8_t fl, uint8_t flm, uint8_t frm, uint8_t fr);
     void SendVersion(uint8_t *ver, uint8_t len);
 };
 

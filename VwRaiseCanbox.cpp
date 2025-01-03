@@ -66,6 +66,37 @@ void VwRaiseCanboxRemote::SendCarInfo(DoorStatus* DoorStatus, CarStatus* carStat
     SendCarInfo(DoorStatus);
 }
 
+void SendWheelAngle(float angle) {
+    uint8_t buf[] = { (uint16_t) angle, (uint16_t) angle >> 8 };
+
+    SendData(WheelAngleCode, buf, sizeof(buf));
+}
+
+void SendParkStatus(bool parked) {
+    uint8_t buf = parked ? 0x02 : 0x00;
+
+    SendData(ParkingStatusCode, &buf, sizeof(buf));
+}
+
+void SendRearRadar(uint8_t rl, uint8_t rlm, uint8_t rrm, uint8_t rr) {
+    uint8_t buf[] = { 0x00, 0x00, 0x00, 0x00 };
+	buf[0] = 11 - rl;
+	buf[1] = 11 - rlm;
+	buf[2] = 11 - rrm;
+	buf[3] = 11 - rr;
+
+    SendData(RearRadarCode, buf, sizeof(buf));
+}
+
+void SendFrontRadar(uint8_t fl, uint8_t flm, uint8_t frm, uint8_t fr) {
+    uint8_t buf[] = { 0x00, 0x00, 0x00, 0x00 };
+	buf[0] = 11 - fl;
+	buf[1] = 11 - flm;
+	buf[2] = 11 - frm;
+	buf[3] = 11 - fr;
+
+    SendData(FrontRadarCode, buf, sizeof(buf));
+}
 
 
 void VwRaiseCanboxRemote::SendData(uint8_t type, uint8_t * msg, uint8_t size) {

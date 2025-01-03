@@ -178,4 +178,27 @@ void loop()
 
         remote->SendAcInfo(&ac_state);
     }
+    if (inChar == 'b') {
+        Serial.println("Parking true");
+        remote->SendParkStatus(true);
+    }
+    if (inChar == 'v') {
+        Serial.println("Parking false");
+        remote->SendParkStatus(false);
+    }
+    if (inChar == 's') {
+        Serial.println("Wheel Angle -50");
+        remote->SendWheelAngle(-50); // values Should be between -100 and 100
+    }
+    if (inChar == '+') {
+        Serial.println("Wheel Angle 50");
+        remote->SendWheelAngle(50); // values Should be between -100 and 100
+    }
+    if (inChar == '/') {
+        Serial.println("Send Radar");
+        // values Should be between 0 and 10 for each area
+        // params are: left, left middle, right middle and right
+        remote->SendFrontRadar(3,2,2,3);
+        remote->SendRearRadar(5,7,7,5);
+    }
 }
